@@ -60,7 +60,11 @@ export function CryptoContextProvider({ children }: { children: JSX.Element }) {
 	}, [])
 
 	function AddAsset(asset: IAsset) {
-		setAssets(prev => MapAssets([...prev, asset], crypto))
+		// * Check if this coin asset already exists
+		// const isExisting = assets.some(a => a.id === asset.id)
+
+		// if (!isExisting)
+		return setAssets(prev => MapAssets([...prev, asset], crypto))
 	}
 
 	return (

@@ -18,9 +18,9 @@ const AppSider: FC = () => {
 
 	return (
 		<Layout.Sider width='25%' style={siderStyle}>
-			{assets.map(asset => {
+			{assets.map((asset, index) => {
 				return (
-					<Card key={asset.id} style={{ marginBottom: '1rem' }}>
+					<Card key={index} style={{ marginBottom: '1rem' }}>
 						<Statistic
 							title={capitalize(asset.id)}
 							value={asset.totalAmount}
@@ -33,11 +33,15 @@ const AppSider: FC = () => {
 							size='small'
 							dataSource={[
 								{
-									title: 'Total Profit',
+									title: 'Динамика',
 									value: asset.totalProfit,
 									isTagged: true
 								},
-								{ title: 'Asset amount', value: asset.amount, isPlain: true }
+								{
+									title: 'Количество монет',
+									value: asset.amount,
+									isPlain: true
+								}
 							]}
 							renderItem={item => (
 								<List.Item>

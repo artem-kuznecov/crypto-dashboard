@@ -34,8 +34,8 @@ const columns: TableColumnsType<DataType> = [
 const AssetsTable: React.FC = () => {
 	const { assets } = useCryptoContext()
 
-	const data = assets.map(asset => ({
-		key: asset.id,
+	const data = assets.map((asset, index) => ({
+		key: index,
 		name: asset.name,
 		price: asset.price,
 		amount: asset.amount
