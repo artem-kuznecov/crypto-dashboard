@@ -29,7 +29,7 @@ function MapAssets(assets: IAsset[], result: ICrypto[]) {
 			name: coin?.name,
 			grow: asset.price < (coin?.price as number),
 			growPercent: percentDifference(asset.price, coin?.price as number),
-			totalAmount: asset.amount * (coin?.price as number),
+			totalAmount: asset.amount * (asset.price || (coin?.price as number)),
 			totalProfit:
 				asset.amount * (coin?.price as number) - asset.amount * asset.price,
 			...asset

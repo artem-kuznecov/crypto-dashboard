@@ -16,16 +16,6 @@ import { useCryptoContext } from '../../context/crypto.context'
 import { IAsset, ICrypto } from '../../types/crypto.type'
 import { CoinInfoBlock } from './coin/CoinInfoBlock'
 
-// const validateMessages = {
-// 	required: 'Поле ${label} является обазательным',
-// 	types: {
-// 		number: 'Значение поля ${label} должно быть числом'
-// 	},
-// 	number: {
-// 		range: 'Значение поля ${label} должно попадать в диапазон [${min} - ${max}]'
-// 	}
-// }
-
 const NewAssetForm: FC<{ onClose: () => void }> = ({ onClose }) => {
 	const [form] = Form.useForm()
 
@@ -86,9 +76,12 @@ const NewAssetForm: FC<{ onClose: () => void }> = ({ onClose }) => {
 			price: values.price,
 			date: values.date?.$d ?? new Date()
 		}
+
 		assetRef.current = newAsset
 		setSubmitted(true)
 		AddAsset(newAsset)
+
+		console.log({ newAsset })
 	}
 
 	function handleAmountChange(value: number | null) {
@@ -118,7 +111,6 @@ const NewAssetForm: FC<{ onClose: () => void }> = ({ onClose }) => {
 				price: +coin.price.toFixed(2)
 			}}
 			onFinish={onFinish}
-			// validateMessages={validateMessages}
 		>
 			<CoinInfoBlock coin={coin} withSymbol={false} />
 			<Divider />
