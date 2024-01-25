@@ -5,8 +5,12 @@ import { Layout, Card, Statistic, List, Typography, Tag } from 'antd'
 import { capitalize } from '../../utils/typography.util'
 import { useCryptoContext } from '../../context/crypto.context'
 
+import { mainStyles } from '../assets/AntdTag'
+
 const siderStyle: CSSProperties = {
+	...mainStyles,
 	padding: '1rem'
+	// overflow: 'scroll'
 }
 
 const AppSider: FC = () => {

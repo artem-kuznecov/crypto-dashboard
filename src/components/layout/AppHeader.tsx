@@ -1,8 +1,9 @@
 import { FC, CSSProperties, useState, useEffect } from 'react'
-import { Layout, Select, SelectProps, Space, Button, Modal } from 'antd'
+import { Layout, Select, SelectProps, Space, Button, Modal, Drawer } from 'antd'
 import { useCryptoContext } from '../../context/crypto.context'
 import { CoinInfoModal } from '../assets/CoinInfoModal'
 import { ICrypto } from '../../types/crypto.type'
+import { NewAssetForm } from '../assets/NewAssetForm'
 
 const headerStyle: CSSProperties = {
 	width: '100%',
@@ -15,12 +16,14 @@ const headerStyle: CSSProperties = {
 }
 
 const AppHeader: FC = () => {
-	// * isOpen state for select
-	const [selectOpen, setSelectOpen] = useState(false)
+	// * isOpen state for coin select
+	const [selectOpen, setSelectOpen] = useState<boolean>(false)
+	// * isOpen state for adding asset darwer
+	const [drawerOpen, setDrawerOpen] = useState<boolean>(false)
 	// * active (selected) coin state
 	const [activeCoin, setActiveCoin] = useState<ICrypto | undefined>(undefined)
 	// * isOpen state for modal
-	const [modalOpen, setModalOpen] = useState(false)
+	const [modalOpen, setModalOpen] = useState<boolean>(false)
 
 	const { crypto } = useCryptoContext()
 
@@ -66,7 +69,9 @@ const AppHeader: FC = () => {
 				)}
 			/>
 
-			<Button type='primary'>Добавить ассет</Button>
+			<Button type='primary' onClick={() => setDrawerOpen(true)}>
+				Добавить вклад
+			</Button>
 
 			<Modal
 				open={modalOpen}
@@ -75,6 +80,16 @@ const AppHeader: FC = () => {
 			>
 				<CoinInfoModal coin={activeCoin as ICrypto} />
 			</Modal>
+
+			<Drawer
+				title='Новый вклад'
+				width={600}
+				onClose={() => setDrawerOpen(false)}
+				open={drawerOpen}
+				destroyOnClose
+			>
+				<NewAssetForm />
+			</Drawer>
 		</Layout.Header>
 	)
 }

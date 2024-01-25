@@ -16,6 +16,7 @@ export interface ICrypto {
 	redditUrl: string
 	websiteUrl: string
 	twitterUrl: string
+	contractAddress?: string
 	explorers: string[]
 }
 
