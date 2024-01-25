@@ -9,13 +9,19 @@ type TypeCryptoContext = {
 	crypto: ICrypto[]
 	loading: boolean
 	AddAsset: (asset: IAsset) => void
+	ReorderAssets: (
+		assets: IAsset[],
+		startIndex: number,
+		endIndex: number
+	) => void
 }
 
 export const CryptoContext = createContext<TypeCryptoContext>({
 	assets: [],
 	crypto: [],
 	loading: false,
-	AddAsset() {}
+	AddAsset() {},
+	ReorderAssets() {}
 })
 
 export function useCryptoContext() {
@@ -59,16 +65,28 @@ export function CryptoContextProvider({ children }: { children: JSX.Element }) {
 		preload()
 	}, [])
 
+	// * Add new asset
 	function AddAsset(asset: IAsset) {
-		// * Check if this coin asset already exists
-		// const isExisting = assets.some(a => a.id === asset.id)
-
-		// if (!isExisting)
 		return setAssets(prev => MapAssets([...prev, asset], crypto))
 	}
 
+	// * Reorder the assets
+	function ReorderAssets(
+		assets: IAsset[],
+		startIndex: number,
+		endIndex: number
+	) {
+		const result = [...assets]
+		const [removed] = result.splice(startIndex, 1)
+		result.splice(endIndex, 0, removed)
+
+		return setAssets(result)
+	}
+
 	return (
-		<CryptoContext.Provider value={{ loading, crypto, assets, AddAsset }}>
+		<CryptoContext.Provider
+			value={{ loading, crypto, assets, AddAsset, ReorderAssets }}
+		>
 			{children}
 		</CryptoContext.Provider>
 	)

@@ -1,11 +1,12 @@
 import { Layout, Spin } from 'antd'
 
 import { AppHeader } from './AppHeader'
-import { AppSider } from './AppSider'
+// import { AppSider } from './AppSider'
 import { AppContent } from './AppContent'
 import { useContext } from 'react'
 
 import { CryptoContext } from '../../context/crypto.context'
+import { DroppableSider } from './DroppableSider'
 
 const AppLayout = () => {
 	const { loading } = useContext(CryptoContext)
@@ -14,10 +15,11 @@ const AppLayout = () => {
 	if (loading) return <Spin fullscreen />
 
 	return (
-		<Layout style={{ height: '100%', minHeight: '100vh' }}>
+		<Layout style={{ height: '100vh', minHeight: '100vh' }}>
 			<AppHeader />
-			<Layout>
-				<AppSider />
+			<Layout style={{ backgroundColor: '#001529' }}>
+				{/* <AppSider /> */}
+				<DroppableSider type='ASSETS' />
 				<AppContent />
 			</Layout>
 		</Layout>
