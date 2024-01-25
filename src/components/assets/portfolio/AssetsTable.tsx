@@ -1,16 +1,16 @@
 import React from 'react'
 import { Table } from 'antd'
-import type { TableColumnsType, TableProps } from 'antd'
+import type { TableColumnsType } from 'antd'
 import { useCryptoContext } from '../../../context/crypto.context'
 
-interface DataType {
-	key: string
+interface IData {
+	key: number
 	name: string | undefined
 	price: number
 	amount: number
 }
 
-const columns: TableColumnsType<DataType> = [
+const columns: TableColumnsType<IData> = [
 	{
 		title: 'Название',
 		dataIndex: 'name',
