@@ -25,6 +25,7 @@ export interface IAsset {
 	amount: number
 	price: number
 	date: Date
+	name?: string
 	grow?: boolean
 	growPercent?: number
 	totalAmount?: number

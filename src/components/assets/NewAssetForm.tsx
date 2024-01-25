@@ -50,10 +50,9 @@ const NewAssetForm: FC<{ onClose: () => void }> = ({ onClose }) => {
 				title='Вклад добавлен в активы'
 				subTitle={`Добавлен ${assetRef.current?.amount}${coin?.symbol} (${coin?.name}) по стоимости ${assetRef.current?.price}$`}
 				extra={[
-					<Button type='primary' key='console' onClick={onClose}>
+					<Button type='primary' key='close' onClick={onClose}>
 						Закрыть
-					</Button>,
-					<Button key='buy'>Buy Again</Button>
+					</Button>
 				]}
 			/>
 		)
@@ -79,6 +78,8 @@ const NewAssetForm: FC<{ onClose: () => void }> = ({ onClose }) => {
 		)
 
 	function onFinish(values: any) {
+		console.log(values.price)
+
 		const newAsset: IAsset = {
 			id: coin?.id as string,
 			amount: values.amount,

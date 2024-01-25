@@ -14,7 +14,7 @@ const AppLayout = () => {
 	if (loading) return <Spin fullscreen />
 
 	return (
-		<Layout style={{ height: '100vh' }}>
+		<Layout style={{ height: '100%', minHeight: '100vh' }}>
 			<AppHeader />
 			<Layout>
 				<AppSider />

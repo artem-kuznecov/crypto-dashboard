@@ -26,6 +26,7 @@ function MapAssets(assets: IAsset[], result: ICrypto[]) {
 	return assets.map(asset => {
 		const coin: ICrypto | undefined = result.find(coin => coin.id === asset.id)
 		return {
+			name: coin?.name,
 			grow: asset.price < (coin?.price as number),
 			growPercent: percentDifference(asset.price, coin?.price as number),
 			totalAmount: asset.amount * (coin?.price as number),

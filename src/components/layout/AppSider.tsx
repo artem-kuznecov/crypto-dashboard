@@ -8,7 +8,7 @@ import { useCryptoContext } from '../../context/crypto.context'
 import { mainStyles } from '../assets/AntdTag'
 
 const siderStyle: CSSProperties = {
-	...mainStyles,
+	// ...mainStyles,
 	padding: '1rem'
 	// overflow: 'scroll'
 }
