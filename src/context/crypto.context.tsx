@@ -8,16 +8,32 @@ type TypeCryptoContext = {
 	assets: IAsset[]
 	crypto: ICrypto[]
 	loading: boolean
+	AddAsset: (asset: IAsset) => void
 }
 
 export const CryptoContext = createContext<TypeCryptoContext>({
 	assets: [],
 	crypto: [],
-	loading: false
+	loading: false,
+	AddAsset() {}
 })
 
 export function useCryptoContext() {
 	return useContext(CryptoContext)
+}
+
+function MapAssets(assets: IAsset[], result: ICrypto[]) {
+	return assets.map(asset => {
+		const coin: ICrypto | undefined = result.find(coin => coin.id === asset.id)
+		return {
+			grow: asset.price < (coin?.price as number),
+			growPercent: percentDifference(asset.price, coin?.price as number),
+			totalAmount: asset.amount * (coin?.price as number),
+			totalProfit:
+				asset.amount * (coin?.price as number) - asset.amount * asset.price,
+			...asset
+		}
+	})
 }
 
 export function CryptoContextProvider({ children }: { children: JSX.Element }) {
@@ -35,30 +51,19 @@ export function CryptoContextProvider({ children }: { children: JSX.Element }) {
 			const assetsFetched: IAsset[] = await fetchAssets()
 
 			setCrypto(result)
-			setAssets(
-				assetsFetched.map(asset => {
-					const coin: ICrypto | undefined = result.find(
-						coin => coin.id === asset.id
-					)
-					return {
-						grow: asset.price < (coin?.price as number),
-						growPercent: percentDifference(asset.price, coin?.price as number),
-						totalAmount: asset.amount * (coin?.price as number),
-						totalProfit:
-							asset.amount * (coin?.price as number) -
-							asset.amount * asset.price,
-						...asset
-					}
-				})
-			)
+			setAssets(MapAssets(assetsFetched, result))
 			setLoading(false)
 		}
 
 		preload()
 	}, [])
 
+	function AddAsset(asset: IAsset) {
+		setAssets(prev => MapAssets([...prev, asset], crypto))
+	}
+
 	return (
-		<CryptoContext.Provider value={{ loading, crypto, assets }}>
+		<CryptoContext.Provider value={{ loading, crypto, assets, AddAsset }}>
 			{children}
 		</CryptoContext.Provider>
 	)

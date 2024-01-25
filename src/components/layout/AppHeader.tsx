@@ -1,7 +1,7 @@
 import { FC, CSSProperties, useState, useEffect } from 'react'
 import { Layout, Select, SelectProps, Space, Button, Modal, Drawer } from 'antd'
 import { useCryptoContext } from '../../context/crypto.context'
-import { CoinInfoModal } from '../assets/CoinInfoModal'
+import { CoinInfoModal } from '../assets/coin/CoinInfoModal'
 import { ICrypto } from '../../types/crypto.type'
 import { NewAssetForm } from '../assets/NewAssetForm'
 
@@ -88,7 +88,7 @@ const AppHeader: FC = () => {
 				open={drawerOpen}
 				destroyOnClose
 			>
-				<NewAssetForm />
+				<NewAssetForm onClose={() => setDrawerOpen(false)} />
 			</Drawer>
 		</Layout.Header>
 	)

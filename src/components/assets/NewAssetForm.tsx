@@ -1,37 +1,41 @@
 import {
 	Select,
 	Space,
-	Typography,
-	Flex,
 	Divider,
 	Form,
 	Button,
 	DatePicker,
-	InputNumber
+	InputNumber,
+	Result
 } from 'antd'
 
 import type { SelectProps } from 'antd'
-import { FC, useState } from 'react'
+import { FC, useRef, useState } from 'react'
 
 import { useCryptoContext } from '../../context/crypto.context'
-import { ICrypto } from '../../types/crypto.type'
+import { IAsset, ICrypto } from '../../types/crypto.type'
+import { CoinInfoBlock } from './coin/CoinInfoBlock'
 
-const validateMessages = {
-	required: 'Поле ${label} является обазательным',
-	types: {
-		number: 'Значение поля ${label} должно быть числом'
-	},
-	number: {
-		range: 'Значение поля ${label} должно попадать в диапазон [${min} - ${max}]'
-	}
-}
+// const validateMessages = {
+// 	required: 'Поле ${label} является обазательным',
+// 	types: {
+// 		number: 'Значение поля ${label} должно быть числом'
+// 	},
+// 	number: {
+// 		range: 'Значение поля ${label} должно попадать в диапазон [${min} - ${max}]'
+// 	}
+// }
 
-const NewAssetForm: FC = () => {
+const NewAssetForm: FC<{ onClose: () => void }> = ({ onClose }) => {
 	const [form] = Form.useForm()
 
-	const { crypto } = useCryptoContext()
+	const { crypto, AddAsset } = useCryptoContext()
 
 	const [coin, setCoin] = useState<ICrypto | undefined>(undefined)
+
+	const [submitted, setSubmitted] = useState<boolean>(false)
+
+	const assetRef = useRef<IAsset>()
 
 	const options: SelectProps['options'] = crypto.map(coin => ({
 		label: coin.name,
@@ -39,7 +43,22 @@ const NewAssetForm: FC = () => {
 		icon: coin.icon
 	}))
 
-	if (!coin) {
+	if (submitted)
+		return (
+			<Result
+				status='success'
+				title='Вклад добавлен в активы'
+				subTitle={`Добавлен ${assetRef.current?.amount}${coin?.symbol} (${coin?.name}) по стоимости ${assetRef.current?.price}$`}
+				extra={[
+					<Button type='primary' key='console' onClick={onClose}>
+						Закрыть
+					</Button>,
+					<Button key='buy'>Buy Again</Button>
+				]}
+			/>
+		)
+
+	if (!coin)
 		return (
 			<Select
 				style={{ width: '100%' }}
@@ -58,15 +77,32 @@ const NewAssetForm: FC = () => {
 				)}
 			/>
 		)
-	}
 
 	function onFinish(values: any) {
-		console.log('finish', values)
+		const newAsset: IAsset = {
+			id: coin?.id as string,
+			amount: values.amount,
+			price: values.price,
+			date: values.date?.$d ?? new Date()
+		}
+		assetRef.current = newAsset
+		setSubmitted(true)
+		AddAsset(newAsset)
 	}
 
 	function handleAmountChange(value: number | null) {
+		const price = form.getFieldValue('price')
+
 		form.setFieldsValue({
-			total: (value as number) * (coin?.price as number)
+			total: +((value as number) * price).toFixed(2)
+		})
+	}
+
+	function handlePriceChange(value: number | null) {
+		const amount: number = form.getFieldValue('amount')
+
+		form.setFieldsValue({
+			total: +(amount * (value as number)).toFixed(2)
 		})
 	}
 
@@ -83,22 +119,7 @@ const NewAssetForm: FC = () => {
 			onFinish={onFinish}
 			// validateMessages={validateMessages}
 		>
-			<Flex align='center'>
-				<img
-					src={coin.icon}
-					alt={coin.name}
-					style={{ width: 40, marginRight: 10 }}
-				/>
-
-				<Typography.Title level={2} style={{ margin: 0, fontFamily: 'Ubuntu' }}>
-					{coin.name}
-				</Typography.Title>
-
-				{/* <Button type='primary' htmlType='submit'>
-					Выбрать заново
-				</Button> */}
-			</Flex>
-
+			<CoinInfoBlock coin={coin} withSymbol={false} />
 			<Divider />
 
 			<Form.Item
@@ -121,7 +142,7 @@ const NewAssetForm: FC = () => {
 			</Form.Item>
 
 			<Form.Item label='Цена' name='price'>
-				<InputNumber disabled style={{ width: '100%' }} />
+				<InputNumber onChange={handlePriceChange} style={{ width: '100%' }} />
 			</Form.Item>
 
 			<Form.Item label='Дата и время' name='date'>

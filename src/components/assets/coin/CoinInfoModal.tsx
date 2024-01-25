@@ -1,21 +1,12 @@
 import { FC } from 'react'
-import { ICrypto } from '../../types/crypto.type'
-import { Divider, Flex, Tag, Typography } from 'antd'
+import { ICrypto } from '../../../types/crypto.type'
+import { Divider, Tag, Typography } from 'antd'
+import { CoinInfoBlock } from './CoinInfoBlock'
 
 const CoinInfoModal: FC<{ coin: ICrypto }> = ({ coin }: { coin: ICrypto }) => {
 	return (
 		<>
-			<Flex align='center'>
-				<img
-					src={coin.icon}
-					alt={coin.name}
-					style={{ width: 40, marginRight: 10 }}
-				/>
-
-				<Typography.Title level={2} style={{ margin: 0, fontFamily: 'Ubuntu' }}>
-					({coin.symbol}) {coin.name}
-				</Typography.Title>
-			</Flex>
+			<CoinInfoBlock coin={coin} withSymbol={true} />
 
 			<Divider />
 
